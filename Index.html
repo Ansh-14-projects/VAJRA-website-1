@@ -1,1 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VAJRA Bluetooth Control</title>
+    <link rel="stylesheet" href="style.css">
+</head>
 
+<body>
+
+<header class="topbar">
+    <div>
+        <h1>VAJRA</h1>
+        <p>Bluetooth Flight Control</p>
+    </div>
+
+    <div class="connection">
+        <span id="statusDot" class="dot offline"></span>
+        <span id="statusText">DISCONNECTED</span>
+    </div>
+</header>
+
+<main>
+
+    <section class="panel connection-panel">
+        <h2>Bluetooth</h2>
+
+        <button id="connectButton" class="primary">
+            CONNECT VAJRA
+        </button>
+
+        <button id="disconnectButton" class="secondary" disabled>
+            DISCONNECT
+        </button>
+
+        <p id="bluetoothMessage">
+            Ready to connect.
+        </p>
+    </section>
+
+    <section class="panel safety-panel">
+        <h2>Safety</h2>
+
+        <div class="state">
+            <span>Flight State</span>
+            <strong id="armState">DISARMED</strong>
+        </div>
+
+        <button id="armButton" class="arm" disabled>
+            ARM
+        </button>
+
+        <button id="stopButton" class="stop" disabled>
+            EMERGENCY STOP
+        </button>
+    </section>
+
+    <section class="panel">
+        <h2>Throttle</h2>
+
+        <div class="throttle-value">
+            <span id="throttleValue">0%</span>
+        </div>
+
+        <input
+            id="throttle"
+            type="range"
+            min="0"
+            max="100"
+            value="0"
+        >
+
+        <div class="range-labels">
+            <span>0%</span>
+            <span>100%</span>
+        </div>
+    </section>
+
+    <section class="panel">
+        <h2>Joystick</h2>
+
+        <div id="joystick">
+            <div id="joystickStick"></div>
+        </div>
+
+        <div class="joystick-values">
+            <div>
+                <span>ROLL</span>
+                <strong id="rollValue">0</strong>
+            </div>
+
+            <div>
+                <span>PITCH</span>
+                <strong id="pitchValue">0</strong>
+            </div>
+        </div>
+    </section>
+
+    <section class="panel motors">
+        <h2>Motor Commands</h2>
+
+        <div class="motor-grid">
+
+            <div class="motor">
+                <span>M4</span>
+                <strong id="m4">900 µs</strong>
+            </div>
+
+            <div class="motor">
+                <span>M1</span>
+                <strong id="m1">900 µs</strong>
+            </div>
+
+            <div class="motor">
+                <span>M3</span>
+                <strong id="m3">900 µs</strong>
+            </div>
+
+            <div class="motor">
+                <span>M2</span>
+                <strong id="m2">900 µs</strong>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="panel">
+        <h2>Telemetry</h2>
+
+        <div class="telemetry-grid">
+
+            <div>
+                <span>Bluetooth</span>
+                <strong id="bleState">OFFLINE</strong>
+            </div>
+
+            <div>
+                <span>Throttle</span>
+                <strong id="telemetryThrottle">0%</strong>
+            </div>
+
+            <div>
+                <span>Roll</span>
+                <strong id="telemetryRoll">0</strong>
+            </div>
+
+            <div>
+                <span>Pitch</span>
+                <strong id="telemetryPitch">0</strong>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="panel log-panel">
+        <h2>Command Log</h2>
+        <pre id="log">VAJRA SYSTEM READY</pre>
+    </section>
+
+</main>
+
+<footer>
+    VAJRA • Ansh's Robotics Project
+</footer>
+
+<script src="script.js"></script>
+
+</body>
+</html>
