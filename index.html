@@ -4,194 +4,258 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>VAJRA | Bluetooth Control</title>
+    <meta
+        name="description"
+        content="VAJRA Robotics Command Center - Drone and Robotics Project"
+    >
+
+    <title>VAJRA ⚡ | Robotics Command Center</title>
 
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <header class="header">
+    <div class="grid-background"></div>
 
-        <div class="brand">
-            <div class="logo">⚡</div>
+    <!-- NAVBAR -->
+    <header class="navbar">
+
+        <a href="#home" class="logo">
+            <span class="logo-symbol">⚡</span>
 
             <div>
-                <h1>VAJRA</h1>
-                <p>Bluetooth Flight Control</p>
+                <div class="logo-title">VAJRA</div>
+                <div class="logo-subtitle">ROBOTICS COMMAND</div>
             </div>
-        </div>
+        </a>
 
-        <div class="connection-status">
-            <span id="statusDot" class="status-dot"></span>
-            <span id="statusText">DISCONNECTED</span>
+        <nav>
+            <a href="#home">HOME</a>
+            <a href="#dashboard">DASHBOARD</a>
+            <a href="#telemetry">TELEMETRY</a>
+            <a href="#about">ABOUT</a>
+        </nav>
+
+        <div class="system-status">
+            <span class="status-dot"></span>
+            SYSTEM ONLINE
         </div>
 
     </header>
 
 
-    <main class="container">
+    <!-- HERO -->
+    <main>
 
-        <!-- BLUETOOTH -->
+        <section id="home" class="hero">
 
-        <section class="card bluetooth-card">
+            <div class="hero-content">
 
-            <div class="card-title">
-                <span>📡</span>
-                <h2>Bluetooth</h2>
-            </div>
+                <div class="small-title">
+                    VAJRA PROJECT // FLIGHT SYSTEM
+                </div>
 
-            <p id="bluetoothMessage">
-                VAJRA is ready to connect.
-            </p>
+                <h1>
+                    BUILD.
+                    <span>CONTROL.</span>
+                    INNOVATE.
+                </h1>
 
-            <div class="button-row">
+                <p>
+                    Welcome to the VAJRA robotics command center.
+                    Monitor flight telemetry, inspect system status,
+                    and explore the future of intelligent robotics.
+                </p>
 
-                <button
-                    id="connectButton"
-                    class="button primary">
-                    CONNECT VAJRA
-                </button>
+                <div class="hero-buttons">
 
-                <button
-                    id="disconnectButton"
-                    class="button secondary"
-                    disabled>
-                    DISCONNECT
-                </button>
+                    <a href="#dashboard" class="button primary">
+                        OPEN COMMAND CENTER
+                    </a>
 
-            </div>
+                    <a href="#telemetry" class="button secondary">
+                        VIEW TELEMETRY
+                    </a>
 
-        </section>
-
-
-        <!-- SAFETY -->
-
-        <section class="card safety-card">
-
-            <div class="card-title">
-                <span>🛡️</span>
-                <h2>Safety</h2>
-            </div>
-
-            <div class="flight-state">
-
-                <span>Flight State</span>
-
-                <strong id="armState">
-                    DISARMED
-                </strong>
+                </div>
 
             </div>
 
-            <button
-                id="armButton"
-                class="button arm-button"
-                disabled>
-                ARM
-            </button>
 
-            <button
-                id="stopButton"
-                class="button emergency-button"
-                disabled>
-                EMERGENCY STOP
-            </button>
+            <!-- RADAR -->
+            <div class="radar-card">
 
-        </section>
+                <div class="radar">
 
+                    <div class="radar-circle circle-one"></div>
+                    <div class="radar-circle circle-two"></div>
+                    <div class="radar-circle circle-three"></div>
 
-        <!-- THROTTLE -->
+                    <div class="radar-horizontal"></div>
+                    <div class="radar-vertical"></div>
 
-        <section class="card throttle-card">
+                    <div class="radar-sweep"></div>
 
-            <div class="card-title">
-                <span>🚀</span>
-                <h2>Throttle</h2>
-            </div>
+                    <div class="radar-center">
+                        VAJRA
+                    </div>
 
-            <div
-                id="throttleValue"
-                class="large-value">
-                0%
-            </div>
+                    <div class="radar-blip blip-one"></div>
+                    <div class="radar-blip blip-two"></div>
 
-            <input
-                id="throttle"
-                type="range"
-                min="0"
-                max="100"
-                value="0">
+                </div>
 
-            <div class="range-labels">
-                <span>0%</span>
-                <span>100%</span>
+                <div class="flight-unit">
+                    FLIGHT UNIT
+                    <strong>VJ-01</strong>
+                </div>
+
             </div>
 
         </section>
 
 
-        <!-- JOYSTICK -->
+        <!-- DASHBOARD -->
+        <section id="dashboard" class="section">
 
-        <section class="card joystick-card">
-
-            <div class="card-title">
-                <span>🕹️</span>
-                <h2>Flight Joystick</h2>
-            </div>
-
-            <div id="joystick">
-
-                <div id="joystickStick"></div>
-
-            </div>
-
-            <div class="joystick-values">
+            <div class="section-header">
 
                 <div>
-                    <span>ROLL</span>
-                    <strong id="rollValue">0</strong>
+                    <div class="small-title">
+                        LIVE CONTROL
+                    </div>
+
+                    <h2>
+                        COMMAND CENTER
+                    </h2>
                 </div>
 
-                <div>
-                    <span>PITCH</span>
-                    <strong id="pitchValue">0</strong>
+                <div class="ready-status">
+                    <span class="status-dot"></span>
+                    READY
                 </div>
 
             </div>
 
-        </section>
+
+            <div class="dashboard-grid">
 
 
-        <!-- MOTORS -->
+                <!-- JOYSTICK -->
+                <div class="panel control-panel">
 
-        <section class="card full-width">
+                    <div class="panel-title">
+                        ◈ FLIGHT CONTROL
+                    </div>
 
-            <div class="card-title">
-                <span>⚙️</span>
-                <h2>Motor Status</h2>
-            </div>
+                    <div class="joystick-container">
 
-            <div class="motor-grid">
+                        <div id="joystick" class="joystick">
 
-                <div class="motor">
-                    <span>M4</span>
-                    <strong id="m4">900 µs</strong>
+                            <div id="joystickStick" class="joystick-stick"></div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="axis-values">
+
+                        <div>
+                            ROLL
+                            <strong id="rollValue">0°</strong>
+                        </div>
+
+                        <div>
+                            PITCH
+                            <strong id="pitchValue">0°</strong>
+                        </div>
+
+                    </div>
+
+                    <button id="armButton" class="arm-button">
+                        ARM SYSTEM
+                    </button>
+
                 </div>
 
-                <div class="motor">
-                    <span>M1</span>
-                    <strong id="m1">900 µs</strong>
+
+                <!-- SYSTEM STATUS -->
+                <div class="panel">
+
+                    <div class="panel-title">
+                        ◉ SYSTEM STATUS
+                    </div>
+
+                    <div class="status-list">
+
+                        <div>
+                            <span>Flight Controller</span>
+                            <strong class="online">ONLINE</strong>
+                        </div>
+
+                        <div>
+                            <span>Main Controller</span>
+                            <strong class="online">ONLINE</strong>
+                        </div>
+
+                        <div>
+                            <span>MPU6050</span>
+                            <strong class="online">READY</strong>
+                        </div>
+
+                        <div>
+                            <span>Bluetooth</span>
+                            <strong id="bluetoothStatus">
+                                STANDBY
+                            </strong>
+                        </div>
+
+                        <div>
+                            <span>Wi-Fi</span>
+                            <strong class="online">READY</strong>
+                        </div>
+
+                    </div>
+
                 </div>
 
-                <div class="motor">
-                    <span>M3</span>
-                    <strong id="m3">900 µs</strong>
-                </div>
 
-                <div class="motor">
-                    <span>M2</span>
-                    <strong id="m2">900 µs</strong>
+                <!-- MOTORS -->
+                <div class="panel">
+
+                    <div class="panel-title">
+                        ◫ MOTOR STATUS
+                    </div>
+
+                    <div class="motor-grid">
+
+                        <div class="motor">
+                            <span>M1</span>
+                            <strong id="motor1">900</strong>
+                            <small>µs</small>
+                        </div>
+
+                        <div class="motor">
+                            <span>M2</span>
+                            <strong id="motor2">900</strong>
+                            <small>µs</small>
+                        </div>
+
+                        <div class="motor">
+                            <span>M3</span>
+                            <strong id="motor3">900</strong>
+                            <small>µs</small>
+                        </div>
+
+                        <div class="motor">
+                            <span>M4</span>
+                            <strong id="motor4">900</strong>
+                            <small>µs</small>
+                        </div>
+
+                    </div>
+
                 </div>
 
             </div>
@@ -200,60 +264,128 @@
 
 
         <!-- TELEMETRY -->
+        <section id="telemetry" class="section">
 
-        <section class="card full-width">
+            <div class="section-header">
 
-            <div class="card-title">
-                <span>📊</span>
-                <h2>Telemetry</h2>
+                <div>
+
+                    <div class="small-title">
+                        SENSOR STREAM
+                    </div>
+
+                    <h2>
+                        TELEMETRY
+                    </h2>
+
+                </div>
+
+                <div class="ready-status">
+                    <span class="status-dot"></span>
+                    LIVE SIMULATION
+                </div>
+
             </div>
+
 
             <div class="telemetry-grid">
 
-                <div class="telemetry-box">
-                    <span>BLE</span>
-                    <strong id="bleState">OFFLINE</strong>
-                </div>
-
-                <div class="telemetry-box">
-                    <span>THROTTLE</span>
-                    <strong id="telemetryThrottle">0%</strong>
-                </div>
-
-                <div class="telemetry-box">
+                <div class="telemetry-card">
                     <span>ROLL</span>
-                    <strong id="telemetryRoll">0</strong>
+                    <strong id="telemetryRoll">0.0°</strong>
                 </div>
 
-                <div class="telemetry-box">
+                <div class="telemetry-card">
                     <span>PITCH</span>
-                    <strong id="telemetryPitch">0</strong>
+                    <strong id="telemetryPitch">0.0°</strong>
                 </div>
+
+                <div class="telemetry-card">
+                    <span>ALTITUDE</span>
+                    <strong id="altitude">0.0 m</strong>
+                </div>
+
+                <div class="telemetry-card">
+                    <span>BATTERY</span>
+                    <strong id="battery">100%</strong>
+                </div>
+
+            </div>
+
+
+            <div class="panel graph-panel">
+
+                <div class="panel-title">
+                    ⌁ ORIENTATION HISTORY
+                </div>
+
+                <canvas id="telemetryCanvas"></canvas>
 
             </div>
 
         </section>
 
 
-        <!-- LOG -->
+        <!-- ABOUT -->
+        <section id="about" class="section about">
 
-        <section class="card full-width">
-
-            <div class="card-title">
-                <span>📜</span>
-                <h2>Command Log</h2>
+            <div class="small-title">
+                PROJECT VAJRA
             </div>
 
-            <pre id="log">VAJRA SYSTEM READY</pre>
+            <h2>
+                ENGINEERING THE FUTURE.
+            </h2>
+
+            <p>
+                VAJRA is a robotics and drone project focused on
+                embedded systems, flight control, telemetry,
+                sensors, motor control and intelligent robotics.
+            </p>
+
+
+            <div class="features">
+
+                <div class="feature">
+                    <strong>ESP32</strong>
+                    <span>Control hardware</span>
+                </div>
+
+                <div class="feature">
+                    <strong>MPU6050</strong>
+                    <span>Orientation sensing</span>
+                </div>
+
+                <div class="feature">
+                    <strong>4 × ESC</strong>
+                    <span>Motor control</span>
+                </div>
+
+                <div class="feature">
+                    <strong>AI</strong>
+                    <span>Future intelligence</span>
+                </div>
+
+            </div>
 
         </section>
 
     </main>
 
 
+    <!-- FOOTER -->
     <footer>
-        <div>VAJRA</div>
-        <p>Ansh's Robotics Project • Bluetooth Flight Control</p>
+
+        <span>VAJRA ⚡</span>
+
+        <span>
+            ROBOTICS COMMAND CENTER
+        </span>
+
+        <span>
+            © 2026
+        </span>
+
     </footer>
 
 
