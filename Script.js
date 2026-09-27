@@ -1,11 +1,18 @@
 "use strict";
 
-const SERVICE_UUID = "19b10000-e8f2-537e-4f6c-d104768a1214";
-const CONTROL_UUID = "19b10001-e8f2-537e-4f6c-d104768a1214";
-const TELEMETRY_UUID = "19b10002-e8f2-537e-4f6c-d104768a1214";
+const SERVICE_UUID =
+    "19b10000-e8f2-537e-4f6c-d104768a1214";
+
+const CONTROL_UUID =
+    "19b10001-e8f2-537e-4f6c-d104768a1214";
+
+const TELEMETRY_UUID =
+    "19b10002-e8f2-537e-4f6c-d104768a1214";
+
 
 let device = null;
 let server = null;
+
 let controlCharacteristic = null;
 let telemetryCharacteristic = null;
 
@@ -18,371 +25,787 @@ let pitch = 0;
 
 let joystickActive = false;
 
-const connectButton = document.getElementById("connectButton");
-const disconnectButton = document.getElementById("disconnectButton");
-const armButton = document.getElementById("armButton");
-const stopButton = document.getElementById("stopButton");
 
-const statusDot = document.getElementById("statusDot");
-const statusText = document.getElementById("statusText");
-const bluetoothMessage = document.getElementById("bluetoothMessage");
+const connectButton =
+    document.getElementById("connectButton");
 
-const armState = document.getElementById("armState");
-const throttleSlider = document.getElementById("throttle");
-const throttleValue = document.getElementById("throttleValue");
+const disconnectButton =
+    document.getElementById("disconnectButton");
 
-const joystick = document.getElementById("joystick");
-const joystickStick = document.getElementById("joystickStick");
+const armButton =
+    document.getElementById("armButton");
 
-const rollValue = document.getElementById("rollValue");
-const pitchValue = document.getElementById("pitchValue");
+const stopButton =
+    document.getElementById("stopButton");
 
-const bleState = document.getElementById("bleState");
-const telemetryThrottle = document.getElementById("telemetryThrottle");
-const telemetryRoll = document.getElementById("telemetryRoll");
-const telemetryPitch = document.getElementById("telemetryPitch");
+const statusDot =
+    document.getElementById("statusDot");
 
-const logElement = document.getElementById("log");
+const statusText =
+    document.getElementById("statusText");
+
+const bluetoothMessage =
+    document.getElementById("bluetoothMessage");
+
+const armState =
+    document.getElementById("armState");
+
+const throttleSlider =
+    document.getElementById("throttle");
+
+const throttleValue =
+    document.getElementById("throttleValue");
+
+const joystick =
+    document.getElementById("joystick");
+
+const joystickStick =
+    document.getElementById("joystickStick");
+
+const rollValue =
+    document.getElementById("rollValue");
+
+const pitchValue =
+    document.getElementById("pitchValue");
+
+const bleState =
+    document.getElementById("bleState");
+
+const telemetryThrottle =
+    document.getElementById("telemetryThrottle");
+
+const telemetryRoll =
+    document.getElementById("telemetryRoll");
+
+const telemetryPitch =
+    document.getElementById("telemetryPitch");
+
+const logElement =
+    document.getElementById("log");
+
 
 function log(message) {
-    const time = new Date().toLocaleTimeString();
+
+    const time =
+        new Date().toLocaleTimeString();
 
     logElement.textContent +=
         `\n[${time}] ${message}`;
 
-    logElement.scrollTop = logElement.scrollHeight;
+    logElement.scrollTop =
+        logElement.scrollHeight;
 }
 
+
 function setConnected(value) {
+
     connected = value;
 
     if (value) {
-        statusDot.className = "dot online";
-        statusText.textContent = "CONNECTED";
-        bleState.textContent = "ONLINE";
 
-        connectButton.disabled = true;
-        disconnectButton.disabled = false;
-        armButton.disabled = false;
-        stopButton.disabled = false;
+        statusDot.classList.add("connected");
+
+        statusText.textContent =
+            "CONNECTED";
+
+        bleState.textContent =
+            "ONLINE";
+
+        connectButton.disabled =
+            true;
+
+        disconnectButton.disabled =
+            false;
+
+        armButton.disabled =
+            false;
+
+        stopButton.disabled =
+            false;
+
     } else {
-        statusDot.className = "dot offline";
-        statusText.textContent = "DISCONNECTED";
-        bleState.textContent = "OFFLINE";
 
-        connectButton.disabled = false;
-        disconnectButton.disabled = true;
-        armButton.disabled = true;
-        stopButton.disabled = true;
+        statusDot.classList.remove("connected");
 
-        setDisarmed();
+        statusText.textContent =
+            "DISCONNECTED";
+
+        bleState.textContent =
+            "OFFLINE";
+
+        connectButton.disabled =
+            false;
+
+        disconnectButton.disabled =
+            true;
+
+        armButton.disabled =
+            true;
+
+        stopButton.disabled =
+            true;
+
+        disarm();
     }
 }
 
-function setDisarmed() {
+
+function disarm() {
+
     armed = false;
-    armState.textContent = "DISARMED";
-    armState.style.color = "#ff304f";
-    armButton.textContent = "ARM";
+
+    armState.textContent =
+        "DISARMED";
+
+    armState.style.color =
+        "#ff3150";
+
+    armButton.textContent =
+        "ARM";
+
+    throttle = 0;
+
+    throttleSlider.value =
+        "0";
+
+    updateThrottle();
+
+    resetJoystick();
+
+    updateMotorDisplay(900);
 }
 
+
 async function connectBluetooth() {
+
     if (!navigator.bluetooth) {
+
         bluetoothMessage.textContent =
             "Web Bluetooth is not supported by this browser.";
+
+        log(
+            "ERROR: Web Bluetooth is unavailable."
+        );
+
         return;
     }
 
+
     try {
-        log("Searching for VAJRA...");
 
-        device = await navigator.bluetooth.requestDevice({
-            filters: [
-                {
-                    services: [SERVICE_UUID]
-                }
-            ],
-            optionalServices: [SERVICE_UUID]
-        });
+        log(
+            "Searching for VAJRA..."
+        );
 
-        log(`Device selected: ${device.name || "VAJRA"}`);
+
+        device =
+            await navigator.bluetooth.requestDevice({
+
+                filters: [
+                    {
+                        services: [
+                            SERVICE_UUID
+                        ]
+                    }
+                ],
+
+                optionalServices: [
+                    SERVICE_UUID
+                ]
+
+            });
+
+
+        log(
+            "VAJRA device selected."
+        );
+
 
         device.addEventListener(
             "gattserverdisconnected",
             handleDisconnect
         );
 
-        server = await device.gatt.connect();
+
+        server =
+            await device.gatt.connect();
+
 
         const service =
-            await server.getPrimaryService(SERVICE_UUID);
+            await server.getPrimaryService(
+                SERVICE_UUID
+            );
+
 
         controlCharacteristic =
-            await service.getCharacteristic(CONTROL_UUID);
+            await service.getCharacteristic(
+                CONTROL_UUID
+            );
+
 
         try {
+
             telemetryCharacteristic =
-                await service.getCharacteristic(TELEMETRY_UUID);
+                await service.getCharacteristic(
+                    TELEMETRY_UUID
+                );
 
-            await telemetryCharacteristic.startNotifications();
 
-            telemetryCharacteristic.addEventListener(
-                "characteristicvaluechanged",
-                handleTelemetry
-            );
+            await telemetryCharacteristic
+                .startNotifications();
+
+
+            telemetryCharacteristic
+                .addEventListener(
+                    "characteristicvaluechanged",
+                    handleTelemetry
+                );
+
         } catch (error) {
-            log("Telemetry characteristic unavailable.");
+
+            log(
+                "Telemetry is unavailable."
+            );
         }
 
+
         setConnected(true);
+
 
         bluetoothMessage.textContent =
             "VAJRA Bluetooth connected.";
 
-        log("Bluetooth connection established.");
+
+        log(
+            "Bluetooth connection established."
+        );
+
 
         await sendCommand("STOP");
+
     } catch (error) {
-        log(`Bluetooth error: ${error.message}`);
+
+        log(
+            `Bluetooth error: ${error.message}`
+        );
 
         bluetoothMessage.textContent =
-            "Connection failed. Check Bluetooth and ESP32.";
+            "Bluetooth connection failed.";
     }
 }
 
-function handleDisconnect() {
-    log("Bluetooth disconnected.");
 
-    controlCharacteristic = null;
-    telemetryCharacteristic = null;
-    server = null;
+function handleDisconnect() {
+
+    log(
+        "VAJRA Bluetooth disconnected."
+    );
+
+    controlCharacteristic =
+        null;
+
+    telemetryCharacteristic =
+        null;
+
+    server =
+        null;
 
     setConnected(false);
 
     bluetoothMessage.textContent =
-        "VAJRA disconnected.";
+        "VAJRA is disconnected.";
 }
 
+
 async function disconnectBluetooth() {
+
     try {
+
         if (controlCharacteristic) {
-            await sendCommand("STOP");
+
+            await sendCommand(
+                "STOP"
+            );
         }
-    } catch (_) {
+
+    } catch (error) {
+        // Ignore stop errors during disconnect.
     }
 
-    if (device && device.gatt.connected) {
+
+    if (
+        device &&
+        device.gatt &&
+        device.gatt.connected
+    ) {
+
         device.gatt.disconnect();
     }
+
 
     handleDisconnect();
 }
 
+
 async function sendCommand(command) {
-    if (!connected || !controlCharacteristic) {
+
+    if (
+        !connected ||
+        !controlCharacteristic
+    ) {
         return;
     }
 
-    try {
-        const encoder = new TextEncoder();
 
-        await controlCharacteristic.writeValue(
-            encoder.encode(command)
+    try {
+
+        const encoder =
+            new TextEncoder();
+
+
+        const data =
+            encoder.encode(command);
+
+
+        await controlCharacteristic
+            .writeValue(data);
+
+
+        log(
+            `TX → ${command}`
         );
 
-        log(`TX → ${command}`);
     } catch (error) {
-        log(`TX ERROR → ${error.message}`);
+
+        log(
+            `TX ERROR → ${error.message}`
+        );
     }
 }
 
-async function toggleArm() {
+
+async function armDrone() {
+
     if (!connected) {
         return;
     }
 
+
+    throttle = 0;
+
+    throttleSlider.value =
+        "0";
+
+    updateThrottle();
+
+
+    await sendCommand(
+        "ARM"
+    );
+
+
+    armed = true;
+
+    armState.textContent =
+        "ARMED";
+
+    armState.style.color =
+        "#00e676";
+
+    armButton.textContent =
+        "DISARM";
+
+
+    log(
+        "SYSTEM ARMED"
+    );
+}
+
+
+async function emergencyStop() {
+
+    throttle = 0;
+
+    roll = 0;
+
+    pitch = 0;
+
+
+    throttleSlider.value =
+        "0";
+
+
+    await sendCommand(
+        "STOP"
+    );
+
+
+    disarm();
+
+
+    log(
+        "!!! EMERGENCY STOP !!!"
+    );
+}
+
+
+async function toggleArm() {
+
     if (!armed) {
-        throttle = 0;
-        throttleSlider.value = "0";
-        updateThrottleDisplay();
 
-        await sendCommand("ARM");
+        await armDrone();
 
-        armed = true;
-        armState.textContent = "ARMED";
-        armState.style.color = "#00e676";
-        armButton.textContent = "DISARM";
-
-        log("SYSTEM ARMED");
     } else {
+
         await emergencyStop();
     }
 }
 
-async function emergencyStop() {
-    throttle = 0;
-    roll = 0;
-    pitch = 0;
 
-    throttleSlider.value = "0";
+function updateThrottle() {
 
-    updateThrottleDisplay();
-    resetJoystick();
+    throttleValue.textContent =
+        `${throttle}%`;
 
-    await sendCommand("STOP");
-
-    setDisarmed();
-
-    log("!!! EMERGENCY STOP !!!");
+    telemetryThrottle.textContent =
+        `${throttle}%`;
 }
 
-function updateThrottleDisplay() {
-    throttleValue.textContent = `${throttle}%`;
-    telemetryThrottle.textContent = `${throttle}%`;
-}
 
-throttleSlider.addEventListener("input", () => {
-    throttle = Number(throttleSlider.value);
+throttleSlider.addEventListener(
+    "input",
+    () => {
 
-    updateThrottleDisplay();
+        throttle =
+            Number(
+                throttleSlider.value
+            );
 
-    sendControlPacket();
-});
+        updateThrottle();
 
-function joystickPosition(event) {
-    const rect = joystick.getBoundingClientRect();
+        sendControlPacket();
+    }
+);
 
-    let x = event.clientX - rect.left;
-    let y = event.clientY - rect.top;
 
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
+function updateJoystick(event) {
 
-    let dx = x - centerX;
-    let dy = y - centerY;
+    const rect =
+        joystick.getBoundingClientRect();
 
-    const maxDistance = rect.width / 2 - 35;
 
-    const distance = Math.sqrt(dx * dx + dy * dy);
+    const centerX =
+        rect.width / 2;
 
-    if (distance > maxDistance) {
-        dx = (dx / distance) * maxDistance;
-        dy = (dy / distance) * maxDistance;
+    const centerY =
+        rect.height / 2;
+
+
+    let x =
+        event.clientX -
+        rect.left;
+
+    let y =
+        event.clientY -
+        rect.top;
+
+
+    let dx =
+        x - centerX;
+
+    let dy =
+        y - centerY;
+
+
+    const maximum =
+        rect.width / 2 - 36;
+
+
+    const distance =
+        Math.sqrt(
+            dx * dx +
+            dy * dy
+        );
+
+
+    if (distance > maximum) {
+
+        dx =
+            (dx / distance) *
+            maximum;
+
+        dy =
+            (dy / distance) *
+            maximum;
     }
 
-    const normalizedX = dx / maxDistance;
-    const normalizedY = dy / maxDistance;
 
-    roll = Math.round(normalizedX * 100);
-    pitch = Math.round(-normalizedY * 100);
+    roll =
+        Math.round(
+            (dx / maximum) * 100
+        );
 
-    const displayX =
-        centerX + dx;
 
-    const displayY =
-        centerY + dy;
+    pitch =
+        Math.round(
+            (-dy / maximum) * 100
+        );
+
 
     joystickStick.style.left =
-        `${displayX}px`;
+        `${centerX + dx}px`;
 
     joystickStick.style.top =
-        `${displayY}px`;
+        `${centerY + dy}px`;
 
-    rollValue.textContent = roll;
-    pitchValue.textContent = pitch;
 
-    telemetryRoll.textContent = roll;
-    telemetryPitch.textContent = pitch;
+    rollValue.textContent =
+        roll;
+
+    pitchValue.textContent =
+        pitch;
+
+
+    telemetryRoll.textContent =
+        roll;
+
+    telemetryPitch.textContent =
+        pitch;
+
 
     sendControlPacket();
 }
+
 
 function resetJoystick() {
+
     roll = 0;
+
     pitch = 0;
 
-    joystickStick.style.left = "50%";
-    joystickStick.style.top = "50%";
 
-    rollValue.textContent = "0";
-    pitchValue.textContent = "0";
+    joystickStick.style.left =
+        "50%";
 
-    telemetryRoll.textContent = "0";
-    telemetryPitch.textContent = "0";
+    joystickStick.style.top =
+        "50%";
+
+
+    rollValue.textContent =
+        "0";
+
+    pitchValue.textContent =
+        "0";
+
+    telemetryRoll.textContent =
+        "0";
+
+    telemetryPitch.textContent =
+        "0";
 }
 
-joystick.addEventListener("pointerdown", event => {
-    joystickActive = true;
-    joystick.setPointerCapture(event.pointerId);
-    joystickPosition(event);
-});
 
-joystick.addEventListener("pointermove", event => {
-    if (!joystickActive) {
-        return;
+joystick.addEventListener(
+    "pointerdown",
+    event => {
+
+        joystickActive = true;
+
+        joystick.setPointerCapture(
+            event.pointerId
+        );
+
+        updateJoystick(event);
     }
+);
 
-    joystickPosition(event);
-});
 
-joystick.addEventListener("pointerup", () => {
-    joystickActive = false;
-    resetJoystick();
-    sendControlPacket();
-});
+joystick.addEventListener(
+    "pointermove",
+    event => {
 
-joystick.addEventListener("pointercancel", () => {
-    joystickActive = false;
-    resetJoystick();
-    sendControlPacket();
-});
+        if (!joystickActive) {
+            return;
+        }
+
+        updateJoystick(event);
+    }
+);
+
+
+joystick.addEventListener(
+    "pointerup",
+    () => {
+
+        joystickActive = false;
+
+        resetJoystick();
+
+        sendControlPacket();
+    }
+);
+
+
+joystick.addEventListener(
+    "pointercancel",
+    () => {
+
+        joystickActive = false;
+
+        resetJoystick();
+
+        sendControlPacket();
+    }
+);
+
 
 async function sendControlPacket() {
-    if (!connected || !armed) {
+
+    if (
+        !connected ||
+        !armed
+    ) {
         return;
     }
+
 
     const command =
         `CTRL,T=${throttle},R=${roll},P=${pitch}`;
 
-    await sendCommand(command);
+
+    await sendCommand(
+        command
+    );
 }
+
+
+function updateMotorDisplay(
+    value
+) {
+
+    document.getElementById(
+        "m1"
+    ).textContent =
+        `${value} µs`;
+
+    document.getElementById(
+        "m2"
+    ).textContent =
+        `${value} µs`;
+
+    document.getElementById(
+        "m3"
+    ).textContent =
+        `${value} µs`;
+
+    document.getElementById(
+        "m4"
+    ).textContent =
+        `${value} µs`;
+}
+
 
 function handleTelemetry(event) {
-    const decoder = new TextDecoder();
+
+    const decoder =
+        new TextDecoder();
+
 
     const data =
-        decoder.decode(event.target.value);
+        decoder.decode(
+            event.target.value
+        );
 
-    log(`RX ← ${data}`);
+
+    log(
+        `RX ← ${data}`
+    );
+
+
+    const parts =
+        data.split(",");
+
+
+    parts.forEach(
+        part => {
+
+            const [key, value] =
+                part.split("=");
+
+
+            if (!key || value === undefined) {
+                return;
+            }
+
+
+            if (key === "T") {
+
+                telemetryThrottle.textContent =
+                    `${value}%`;
+            }
+
+
+            if (key === "R") {
+
+                telemetryRoll.textContent =
+                    value;
+            }
+
+
+            if (key === "P") {
+
+                telemetryPitch.textContent =
+                    value;
+            }
+        }
+    );
 }
+
 
 connectButton.addEventListener(
     "click",
     connectBluetooth
 );
 
+
 disconnectButton.addEventListener(
     "click",
     disconnectBluetooth
 );
+
 
 armButton.addEventListener(
     "click",
     toggleArm
 );
 
+
 stopButton.addEventListener(
     "click",
     emergencyStop
 );
 
-window.addEventListener("beforeunload", () => {
-    if (device && device.gatt.connected) {
-        device.gatt.disconnect();
+
+window.addEventListener(
+    "beforeunload",
+    () => {
+
+        if (
+            device &&
+            device.gatt &&
+            device.gatt.connected
+        ) {
+
+            device.gatt.disconnect();
+        }
     }
-});
+);
+
 
 setConnected(false);
-updateThrottleDisplay();
+
+updateThrottle();
+
 resetJoystick();
+
+updateMotorDisplay(900);
